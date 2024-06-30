@@ -7,8 +7,8 @@
     <style>
         /* Estilos CSS para a página Dashboard do aniversariante */
         body {
-            background-color: #fde3a7; /* Cor de fundo suave */
-            color: #333; /* Cor do texto principal */
+            background-color: #fde3a7;
+            color: #333;
             font-family: 'Inter', sans-serif;
             margin: 0;
             padding: 0;
@@ -51,11 +51,11 @@
         }
 
         .header {
-            background-color: #6b63ff; /* Cor de fundo do cabeçalho */
-            color: #fff; /* Cor do texto do cabeçalho */
+            background-color: #6b63ff;
+            color: #fff;
             padding: 1rem;
             text-align: center;
-            margin-bottom: 2rem; /* Espaço abaixo do cabeçalho */
+            margin-bottom: 2rem;
         }
 
         .nav-link {
@@ -79,52 +79,52 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            background-color: #fff; /* Fundo do conteúdo */
-            border-radius: 10px; /* Borda arredondada */
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra suave */
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
         h1 {
-            font-size: 2rem; /* Tamanho da fonte do título */
-            color: #333; /* Cor do título */
+            font-size: 2rem;
+            color: #333;
         }
 
         table {
             width: 100%;
-            border-collapse: collapse; /* Mesclar bordas das células */
+            border-collapse: collapse;
             margin-top: 2rem;
         }
 
         table th, table td {
             padding: 1rem;
             text-align: left;
-            border-bottom: 1px solid #ccc; /* Linha inferior das células */
+            border-bottom: 1px solid #ccc;
         }
 
         table th {
-            background-color: #6b63ff; /* Fundo das células do cabeçalho */
-            color: #fff; /* Cor do texto do cabeçalho */
-            text-transform: uppercase; /* Texto em maiúsculas */
+            background-color: #6b63ff;
+            color: #fff;
+            text-transform: uppercase;
         }
 
         table td {
-            background-color: #f9f9f9; /* Fundo das células de dados */
-            color: #333; /* Cor do texto das células de dados */
+            background-color: #f9f9f9;
+            color: #333;
         }
 
         .footer {
-            background-color: #333; /* Fundo do rodapé */
-            color: #fff; /* Cor do texto do rodapé */
+            background-color: #333;
+            color: #fff;
             text-align: center;
             padding: 1rem;
             position: fixed;
             bottom: 0;
             width: 100%;
-            font-size: 0.875rem; /* Tamanho da fonte */
+            font-size: 0.875rem;
         }
 
         .footer a {
-            color: #fff; /* Cor do link no rodapé */
+            color: #fff;
             text-decoration: none;
         }
 
@@ -295,28 +295,42 @@
     </div>
 
     <footer class="footer">
-        Criado pelo Dev Arthur Gonzaga <span style="cursor: pointer;">↓</span> <a href="https://www.linkedin.com/in/arthur-gonzaga-42b989257/" target="_blank">LinkedIn</a>
+        Criado pelo Dev Arthur Gonzaga <span style="cursor: pointer;">&#8595;</span>
     </footer>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            renderGuestList();
+        function addGuest() {
+            const firstname = document.getElementById('add-firstname').value;
+            const lastname = document.getElementById('add-lastname').value;
+            const guests = document.getElementById('add-guests').value;
+            const timestamp = new Date().toLocaleString();
 
-            const menuToggle = document.getElementById('menu-toggle');
-            const menu = document.getElementById('menu');
+            if (firstname && lastname && guests) {
+                const newGuest = {
+                    firstname: firstname,
+                    lastname: lastname,
+                    guests: guests,
+                    timestamp: timestamp
+                };
 
-            menuToggle.addEventListener('click', function() {
-                menu.classList.toggle('show');
-            });
-        });
+                let guestList = JSON.parse(localStorage.getItem('guests')) || [];
+                guestList.push(newGuest);
+                localStorage.setItem('guests', JSON.stringify(guestList));
+
+                document.getElementById('add-firstname').value = '';
+                document.getElementById('add-lastname').value = '';
+                document.getElementById('add-guests').value = '';
+
+                renderGuestList();
+            } else {
+                alert('Por favor, preencha todos os campos.');
+            }
+        }
 
         function renderGuestList() {
             const guestList = JSON.parse(localStorage.getItem('guests')) || [];
             const guestListElement = document.getElementById('guest-list');
-            guestListElement.innerHTML = ''; // Limpa a lista antes de renderizar novamente
-
-            // Ordena a lista de convidados por data/hora de confirmação
-            guestList.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+            guestListElement.innerHTML = '';
 
             guestList.forEach((guest, index) => {
                 const row = document.createElement('tr');
@@ -349,29 +363,9 @@
             });
         }
 
-        function addGuest() {
-            const firstname = document.getElementById('add-firstname').value;
-            const lastname = document.getElementById('add-lastname').value;
-            const guests = document.getElementById('add-guests').value;
-            const timestamp = new Date().toLocaleString();
-
-            if (firstname && lastname && guests) {
-                const newGuest = { firstname, lastname, guests, timestamp };
-
-                let guestList = JSON.parse(localStorage.getItem('guests')) || [];
-                guestList.push(newGuest);
-                localStorage.setItem('guests', JSON.stringify(guestList));
-
-                // Limpa os campos do formulário após a adição
-                document.getElementById('add-firstname').value = '';
-                document.getElementById('add-lastname').value = '';
-                document.getElementById('add-guests').value = '';
-
-                renderGuestList();
-            } else {
-                alert('Por favor, preencha todos os campos.');
-            }
-        }
+        document.addEventListener('DOMContentLoaded', function() {
+            renderGuestList();
+        });
 
         function deleteGuest(index) {
             let guestList = JSON.parse(localStorage.getItem('guests')) || [];
@@ -379,6 +373,13 @@
             localStorage.setItem('guests', JSON.stringify(guestList));
             renderGuestList();
         }
+
+        const menuToggle = document.getElementById('menu-toggle');
+        const menu = document.getElementById('menu');
+
+        menuToggle.addEventListener('click', () => {
+            menu.classList.toggle('show');
+        });
     </script>
 </body>
 </html>
